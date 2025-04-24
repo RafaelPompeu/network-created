@@ -1,0 +1,206 @@
+/* --- Additions/Modifications for Dynamic Input --- */
+
+#controls .input-area {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#controls label {
+    font-size: 0.9em;
+    font-weight: 400;
+    color: var(--text-light);
+    margin: 0;
+}
+
+#connections {
+    padding: 10px 12px;
+    width: calc(100% - 26px); /* Adjust width considering padding/border */
+    max-width: 500px; /* Optional: Limit max width */
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-family: Consolas, 'Courier New', monospace; /* Better for code-like input */
+    font-size: 0.9em;
+    line-height: 1.4;
+    background-color: #fff;
+    color: var(--text-color);
+    resize: vertical; /* Allow vertical resize */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#connections:focus {
+    outline: none;
+    border-color: var(--highlight-color);
+    box-shadow: 0 0 0 3px rgba(86, 153, 163, 0.15);
+}
+
+#connections::placeholder {
+    color: #adb5bd;
+    font-style: italic;
+    font-weight: 300;
+}
+
+#generate-button {
+    padding: 9px 18px;
+    background-color: var(--highlight-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-family: var(--font-family);
+    font-size: 0.95em;
+    font-weight: 400;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    align-self: flex-start; /* Align button to the left */
+    margin-top: 5px;
+}
+
+#generate-button:hover {
+    background-color: #4a8891; /* Slightly darker highlight */
+    box-shadow: 0 2px 4px rgba(44, 62, 80, 0.1);
+}
+
+/* --- Existing Styles Below --- */
+/* (Keep all your previous styles for body, graph-container, svg, nodes, links, labels, zoom etc.) */
+
+/* --- Base & Layout --- */
+:root {
+    /* Professional Pastel Palette */
+    --bg-color: #f8f9fc; /* Very light cool grey */
+    --controls-bg: #ffffff;
+    --border-color: #e8eaf6; /* Soft lavender grey */
+    --text-color: #2c3e50; /* Dark slate blue */
+    --text-light: #7f8c9a; /* Cool grey */
+    --node-stroke: #ffffff;
+    --link-color: #ced4da; /* Light grey for default links */
+    --highlight-color: #5699a3; /* Muted teal/blue for highlight */
+    --highlight-stroke: var(--highlight-color);
+    --shadow-color: rgba(44, 62, 80, 0.08); /* Softer shadow based on text color */
+    --font-family: 'Lato', sans-serif;
+    --zoom-controls-bg: #222; /* Dark background for zoom */
+    --zoom-controls-icon: #fff; /* White icons */
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  position: relative; /* Needed for positioning zoom controls */
+}
+
+/* --- Controls Area --- */
+#controls {
+  padding: 18px 25px;
+  background-color: var(--controls-bg);
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+  box-shadow: 0 3px 5px var(--shadow-color);
+  z-index: 10;
+}
+
+#controls .title-area { margin-bottom: 5px; } /* Reduced margin */
+#controls h1 { font-size: 1.6em; font-weight: 400; color: var(--text-color); margin: 0 0 2px 0; padding: 0; }
+#controls h2 { font-size: 0.95em; font-weight: 300; color: var(--text-light); margin: 0; padding: 0; }
+/* Remove old search area style if present */
+/* #controls .search-area { display: flex; align-items: center; gap: 10px; } */
+
+
+/* --- SVG Canvas --- */
+#graph-container {
+  flex-grow: 1;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+svg {
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-color);
+  display: block;
+  cursor: grab;
+}
+svg:active { cursor: grabbing; }
+
+/* --- Graph Elements --- */
+.nodes circle { cursor: pointer; stroke-width: 2px; stroke: var(--node-stroke); transition: opacity 0.3s ease, r 0.3s ease, stroke 0.3s ease, stroke-width 0.3s ease, fill 0.3s ease; }
+.nodes circle.highlighted { stroke: var(--highlight-stroke); stroke-width: 3px; }
+.links line { stroke: var(--link-color); stroke-opacity: 0.4; stroke-width: 1px; transition: opacity 0.3s ease, stroke 0.3s ease, stroke-opacity 0.3s ease, stroke-width 0.3s ease; }
+.links line.highlighted { stroke: var(--highlight-color); stroke-opacity: 0.9; stroke-width: 2px; }
+#arrow path { fill: var(--link-color); transition: fill 0.3s ease; }
+#arrow-highlight path { fill: var(--highlight-color); transition: fill 0.3s ease; }
+.node-label {
+  font-size: 10.5px;
+  font-weight: 400;
+  font-family: var(--font-family);
+  fill: var(--text-color);
+  pointer-events: none;
+  opacity: 0.85;
+  transition: opacity 0.3s ease;
+  paint-order: stroke;
+  stroke: var(--bg-color);
+  stroke-width: 2.5px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  text-anchor: start;
+}
+.faded { opacity: 0.08 !important; }
+.node-label.faded-label { opacity: 0.15 !important; }
+
+/* --- Zoom Controls --- */
+#zoom-controls {
+  position: absolute;
+  bottom: 25px;
+  right: 25px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.zoom-button-group {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--zoom-controls-bg);
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    overflow: hidden;
+}
+.zoom-button {
+  background-color: var(--zoom-controls-bg);
+  color: var(--zoom-controls-icon);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.zoom-button:hover { background-color: #444; }
+.zoom-button:first-child { border-bottom: 1px solid #555; }
+#zoom-recenter {
+  margin-top: 8px;
+   background-color: var(--zoom-controls-bg);
+   border-radius: 6px;
+   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   width: 36px;
+   height: 36px;
+   cursor: pointer;
+   transition: background-color 0.2s ease;
+}
+#zoom-recenter:hover { background-color: #444; }
+#zoom-recenter svg { width: 18px; height: 18px; fill: var(--zoom-controls-icon); }

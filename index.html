@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Dynamic Network Graph Generator</title>
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Link to your external CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="controls">
+        <div class="title-area">
+            <h1>Dynamic Network Graph</h1>
+            <h2>Enter connections below (e.g., A -> B)</h2>
+        </div>
+        <div class="input-area">
+            <label for="connections">Connections (one per line):</label>
+            <textarea id="connections" rows="8" placeholder="node1 -> node2
+node2 -> node3
+node1 -> node3"></textarea>
+            <button id="generate-button">Generate / Update Graph</button>
+        </div>
+    </div>
+
+    <!-- Container for SVG and Zoom Controls -->
+    <div id="graph-container">
+        <svg id="graph-svg"></svg>
+        <!-- Zoom Controls (remain the same) -->
+        <div id="zoom-controls">
+             <button id="zoom-recenter" class="zoom-button" aria-label="Recenter Map">
+                 <svg viewBox="0 0 24 24"> <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3A8.994 8.994 0 0 0 13 3.06V1h-2v2.06A8.994 8.994 0 0 0 3.06 11H1v2h2.06A8.994 8.994 0 0 0 11 20.94V23h2v-2.06A8.994 8.994 0 0 0 20.94 13H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/> </svg>
+             </button>
+            <div class="zoom-button-group">
+                <button id="zoom-in" class="zoom-button" aria-label="Zoom In">+</button>
+                <button id="zoom-out" class="zoom-button" aria-label="Zoom Out">−</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- D3.js Library -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- Link to your external JavaScript -->
+    <script src="js/script.js"></script>
+</body>
+</html>
