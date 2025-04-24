@@ -2,7 +2,7 @@
 
 Uma ferramenta web simples para visualizar conexões entre nós definidas pelo usuário através de uma entrada de texto simples. Crie e interaja com grafos de rede dinamicamente no seu navegador.
 
-![Placeholder for Screenshot/GIF]()
+![Placeholder for Screenshot/GIF](https://github.com/RafaelPompeu/network-created/blob/main/network.png)
 *(Sugestão: Substitua o link acima por um screenshot ou GIF do seu grafo em ação!)*
 
 ## ✨ Funcionalidades
